@@ -2,28 +2,55 @@
 # Author: Del161
 
 import mido
+import sys
 
-def importfile():
+def importfile(song):
     # simply opens the file
 
-    mid = mido.MidiFile("../Samplemusic/?.midi", clip=True)
+    #current placeholder will be replaced with sys.argv
+    mid = mido.MidiFile(song, clip=True)
     tracks = mid.tracks
 
     return tracks
     
 
-
-def extractdata(tracks):
+def extractdata(tracks, u_track):
     x = 0
-    for t in tracks:
-        for message in t[0:20]:
-            print(message)
-        print("###########################")
+    # you would want the track with the not_on and note_off messages
+    # these will be the main notes most often
+    # you can use this to check
+    #for t in tracks:
+    #    for message in t[0:20]:
+    #        print(message)
+    #    print("###########################")
+
+    fulltrack =[]
+
+    # have to make it into a list so its a usable type
+    for messages in tracks[u_track]:
+        if str(messages).startswith("note"):
+            fulltrack.append(str(messages)) 
+    for lines in fulltrack:
+        print(lines)  
+
+
+
 
 
 def main():
-    tracks = importfile()
-    extractdata(tracks)
+    # main
+
+    # allows the user to input what song and track they want
+    arguments = sys.argv
+    if len(arguments)>1:
+        song = arguments[1]
+    else: song = "../Samplemusic/OCaraMia.mid"
+    if len(arguments)>2:
+        u_track = arguments[2]
+    else: u_track = 3
+
+    tracks = importfile(song)
+    extractdata(tracks, u_track)
 
 if __name__ == "__main__":
     main()
