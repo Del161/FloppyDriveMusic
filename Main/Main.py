@@ -3,6 +3,7 @@
 
 import mido
 import sys
+import RaspberryFPPlayer as RFPP
 
 def importfile(song):
     # simply opens the file
@@ -31,7 +32,8 @@ def extractdata(tracks, u_track):
         if str(messages).startswith("note"):
             fulltrack.append(str(messages)) 
     for lines in fulltrack:
-        print(lines)  
+        lines = lines.split(" ")
+        print(lines)
 
 
 
@@ -51,6 +53,9 @@ def main():
 
     tracks = importfile(song)
     extractdata(tracks, u_track)
+    RFPP.setup()
+    RFPP.reset()
+    RFPP.calculate_pause()
 
 if __name__ == "__main__":
     main()
