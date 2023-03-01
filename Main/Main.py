@@ -26,6 +26,8 @@ def extractdata(tracks, u_track):
     #    print("###########################")
 
     fulltrack =[]
+    notetime = []
+    notepitch = []
 
     # have to make it into a list so its a usable type
     for messages in tracks[u_track]:
@@ -34,6 +36,10 @@ def extractdata(tracks, u_track):
     for lines in fulltrack:
         lines = lines.split(" ")
         print(lines)
+        notetime.append(lines[4])
+        notepitch.append(lines[2])
+    notedata = [notetime, notepitch]
+    return notedata
 
 
 
@@ -52,10 +58,10 @@ def main():
     else: u_track = 3
 
     tracks = importfile(song)
-    extractdata(tracks, u_track)
+    notedata = extractdata(tracks, u_track)
     RFPP.setup()
     RFPP.reset()
-    RFPP.calculate_pause()
+    RFPP.calculate_pause(notedata)
 
 if __name__ == "__main__":
     main()
