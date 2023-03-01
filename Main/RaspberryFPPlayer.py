@@ -171,11 +171,15 @@ def reset():
         sleep(0.5)
         i+=1
 
-def calculate_pause():
+def calculate_pause(notedata):
     print("calc")
     direction = ""
 
-    for note in notes:
+    for index in len(notedata[1]):
+        notetime = notedata[1]
+        notepitch = notedata[0]
+        note_time = notetime[index + 1]
+
         i = 0
         if direction == GPIO.HIGH:
             direction = GPIO.LOW
@@ -183,12 +187,12 @@ def calculate_pause():
             direction = GPIO.HIGH
         
         GPIO.output(dirPin,direction)
-        while i<50:
+        while i<note_time:
             GPIO.output(stepPin,GPIO.HIGH)
             GPIO.output(stepPin,GPIO.LOW)
             i+=1
             print(frequencies[note])
-            sleep(1/frequencies[note])
+            sleep(1/midiNotes[notepitch[index]])
         i = 0
     print("done")
     GPIO.cleanup()
