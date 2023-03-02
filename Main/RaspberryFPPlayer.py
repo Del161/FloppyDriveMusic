@@ -175,24 +175,26 @@ def calculate_pause(notedata):
     print("calc")
     direction = ""
 
-    for index in len(notedata[1]):
-        notetime = notedata[1]
-        notepitch = notedata[0]
+    for index in range(len(notedata[1])):
+        notetime = notedata[0]
+        notepitch = notedata[1]
         note_time = notetime[index + 1]
+        note_key = notepitch[index]
 
         i = 0
-        if direction == GPIO.HIGH:
-            direction = GPIO.LOW
-        else:
-            direction = GPIO.HIGH
-        
-        GPIO.output(dirPin,direction)
-        while i<note_time:
+        while i<int(note_time):
             GPIO.output(stepPin,GPIO.HIGH)
             GPIO.output(stepPin,GPIO.LOW)
-            i+=1
-            print(frequencies[note])
-            sleep(1/midiNotes[notepitch[index]])
+            i+=10
+            print(direction)
+            sleep(1/midiNotes[int(note_key)])
+            
+            if direction == GPIO.HIGH:
+                    direction = GPIO.LOW
+            else: direction = GPIO.HIGH
+            GPIO.output(dirPin,direction)
+        
+
         i = 0
     print("done")
     GPIO.cleanup()

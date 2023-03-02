@@ -1,5 +1,6 @@
 # 01/03/2023
 # Author: Del161
+# can contact me here on discord XDel #0982
 
 import mido
 import sys
@@ -26,23 +27,31 @@ def extractdata(tracks, u_track):
     #    print("###########################")
 
     fulltrack =[]
+    note_timing = []
     notetime = []
+    note_key = []
     notepitch = []
 
     # have to make it into a list so its a usable type
-    for messages in tracks[u_track]:
+    for messages in tracks[int(u_track)]:
         if str(messages).startswith("note"):
             fulltrack.append(str(messages)) 
     for lines in fulltrack:
         lines = lines.split(" ")
-        print(lines)
         notetime.append(lines[4])
         notepitch.append(lines[2])
-    notedata = [notetime, notepitch]
+    for times in notetime:
+        times = times.split("=")
+        times = times[1]
+        note_timing.append(times)
+    for keys in notepitch:
+        keys = keys.split("=")
+        keys = keys[1]
+        note_key.append(keys)
+        
+    notedata = [note_timing, note_key]
+    print(notedata)
     return notedata
-
-
-
 
 
 def main():
@@ -55,7 +64,7 @@ def main():
     else: song = "../Samplemusic/OCaraMia.mid"
     if len(arguments)>2:
         u_track = arguments[2]
-    else: u_track = 3
+    else: u_track = 2
 
     tracks = importfile(song)
     notedata = extractdata(tracks, u_track)
