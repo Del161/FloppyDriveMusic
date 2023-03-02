@@ -1,10 +1,12 @@
 import RPi.GPIO as GPIO          
 from time import sleep
+import time
 
-# this is intended to become a python project that plays music on floppy drives
-# stepper motors
+# this is intended to become a python project that plays 
+# music on floppy drives stepper motors
 # 01/03/2023
 # author Del161
+# discord XDel #0982
 
 
 # the 2 pins for 1 floppy drive
@@ -14,8 +16,7 @@ stepPin = 18
 temp1=1
 pins = [17, 18]
 
-# all the midi notes on a piano, most will be too high for a floppy drive though
-    
+# all the midi notes on a piano, most will be too high for a floppy drive though    
 midiNotes = {
 127:12543.85,
 126:11839.82,
@@ -147,7 +148,7 @@ midiNotes = {
 
 def setup():
     # setup for the pins
-
+    GPIO.cleanup()
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(pins,GPIO.OUT)
     GPIO.output(dirPin,GPIO.LOW)
@@ -173,7 +174,7 @@ def reset():
 
 def calculate_pause(notedata):
     print("calc")
-    direction = ""
+    direction = GPIO.HIGH
     i2 = 0
 
     for index in range(len(notedata[1])):
@@ -182,26 +183,32 @@ def calculate_pause(notedata):
         note_time = notetime[index + 1]
         note_key = notepitch[index]
 
-        i = 0
         i2 = 0
-        while i<int(note_time):
+        # endtime is when the note should end
+        endtime = time.time() + (int(note_time)/100)
+
+        while time.time()<endtime:
+            # send the pulse
             GPIO.output(stepPin,GPIO.HIGH)
             GPIO.output(stepPin,GPIO.LOW)
-            i+=10
-            print(direction)
+
+            # sleep the fequency of the note
             sleep(1/midiNotes[int(note_key)])
-            
+
+            print(time.time())
+            print(endtime)
+            print(midiNotes[int(note_key)])
+
+            # change direction of the motor
             if direction == GPIO.HIGH and i2 == 5:
                     direction = GPIO.LOW
                     i2 = 0
             elif direction == GPIO.LOW and i2 == 5:
                 direction = GPIO.HIGH
                 i2 = 0
+            
             GPIO.output(dirPin,direction)
             i2 += 1
-        
-
-        i = 0
     print("done")
     GPIO.cleanup()
 

@@ -64,7 +64,7 @@ def main():
     else: song = "../Samplemusic/OCaraMia.mid"
     if len(arguments)>2:
         u_track = arguments[2]
-    else: u_track = 2
+    else: u_track = 3
 
     tracks = importfile(song)
     notedata = extractdata(tracks, u_track)
